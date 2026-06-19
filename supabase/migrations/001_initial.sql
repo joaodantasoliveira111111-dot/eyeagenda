@@ -6,7 +6,7 @@
 -- Limpeza preventiva de objetos anteriores para evitar erros de "já existe"
 DROP TRIGGER IF EXISTS trg_new_user ON auth.users CASCADE;
 DROP TRIGGER IF EXISTS trg_agendamentos_updated ON agendamentos CASCADE;
-DROP FUNCTION IF EXISTS handle_new_user() CASCADE;
+DROP FUNCTION IF EXISTS public.handle_new_user() CASCADE;
 DROP FUNCTION IF EXISTS update_updated_at() CASCADE;
 DROP TABLE IF EXISTS agendamentos CASCADE;
 DROP TABLE IF EXISTS profiles CASCADE;
@@ -72,10 +72,10 @@ CREATE TRIGGER trg_agendamentos_updated
   FOR EACH ROW EXECUTE FUNCTION update_updated_at();
 
 -- Função para auto-criar profile ao registrar via Supabase Auth
-CREATE OR REPLACE FUNCTION handle_new_user()
+CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
 BEGIN
-  INSERT INTO profiles (id, nome, login, role, cor)
+  INSERT INTO public.profiles (id, nome, login, role, cor)
   VALUES (
     NEW.id,
     COALESCE(NEW.raw_user_meta_data->>'nome', split_part(NEW.email, '@', 1)),
@@ -90,7 +90,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 DROP TRIGGER IF EXISTS trg_new_user ON auth.users;
 CREATE TRIGGER trg_new_user
   AFTER INSERT ON auth.users
-  FOR EACH ROW EXECUTE FUNCTION handle_new_user();
+  FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
 
 -- ============================================
 -- SEED DATA - Usuários
