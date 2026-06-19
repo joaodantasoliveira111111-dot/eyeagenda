@@ -3,6 +3,14 @@
 -- Execute no SQL Editor do Supabase Dashboard
 -- ============================================
 
+-- Limpeza preventiva de objetos anteriores para evitar erros de "já existe"
+DROP TRIGGER IF EXISTS trg_new_user ON auth.users CASCADE;
+DROP TRIGGER IF EXISTS trg_agendamentos_updated ON agendamentos CASCADE;
+DROP FUNCTION IF EXISTS handle_new_user() CASCADE;
+DROP FUNCTION IF EXISTS update_updated_at() CASCADE;
+DROP TABLE IF EXISTS agendamentos CASCADE;
+DROP TABLE IF EXISTS profiles CASCADE;
+
 -- Tabela de profiles (vincula auth.users com dados do app)
 CREATE TABLE IF NOT EXISTS profiles (
   id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
