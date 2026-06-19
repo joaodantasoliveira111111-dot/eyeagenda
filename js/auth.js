@@ -9,7 +9,7 @@ async function doLogin(){
 
   errEl.style.display='none';
 
-  const {data,error} = await sb.auth.signInWithPassword({email,senha});
+  const {data,error} = await sb.auth.signInWithPassword({email,password:senha});
 
   if(error){
     errEl.textContent=error.message||'Login ou senha incorretos.';
