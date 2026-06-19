@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>eye &middot; Agenda</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.47.0/iconfont/tabler-icons.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <div class="loading-overlay" id="loading"><div class="spinner"></div></div>
+
+  <!-- ═══ LOGIN ═══ -->
+  <div class="screen on" id="s-login">
+    <div class="login-card">
+      <div class="login-logo">
+        <svg width="34" height="34" viewBox="0 0 100 100" fill="none">
+          <path d="M5 50C18 24 34 14 50 14s32 10 45 36C82 76 66 86 50 86S18 76 5 50Z" fill="#16161D" stroke="#5B6EFF" stroke-width="3.5"/>
+          <ellipse cx="50" cy="50" rx="18" ry="18" fill="#5B6EFF"/>
+          <ellipse cx="50" cy="50" rx="8" ry="8" fill="#0C0C0F"/>
+          <circle cx="42" cy="43" r="3.5" fill="white"/>
+        </svg>
+        <div><div class="lname ff">eye</div><div class="lsub">Agenda &middot; Carros Online</div></div>
+      </div>
+      <label class="form-label">Email</label>
+      <input class="finput" id="li-user" placeholder="seu@email.com" autocomplete="username">
+      <label class="form-label">Senha</label>
+      <input class="finput" id="li-pass" type="password" placeholder="Sua senha" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+      <button class="btn-prim" onclick="doLogin()">Entrar</button>
+      <div class="err-msg" id="li-err">Login ou senha incorretos.</div>
+    </div>
+  </div>
+
+  <!-- ═══ APP ═══ -->
+  <div class="screen" id="s-app">
+    <div class="topbar">
+      <div class="top-brand">
+        <svg width="24" height="24" viewBox="0 0 100 100" fill="none">
+          <path d="M5 50C18 24 34 14 50 14s32 10 45 36C82 76 66 86 50 86S18 76 5 50Z" fill="#16161D" stroke="#5B6EFF" stroke-width="3.5"/>
+          <ellipse cx="50" cy="50" rx="18" ry="18" fill="#5B6EFF"/>
+          <ellipse cx="50" cy="50" rx="8" ry="8" fill="#0C0C0F"/>
+          <circle cx="42" cy="43" r="3.5" fill="white"/>
+        </svg>
+        <span class="tb-name ff">eye</span>
+        <span class="top-role-badge" id="top-role-badge"></span>
+      </div>
+      <div class="top-right">
+        <span class="top-username" id="top-username"></span>
+        <button class="btn-new" onclick="openAppt()"><i class="ti ti-plus"></i>Novo lead</button>
+        <button class="btn-logout" onclick="doLogout()"><i class="ti ti-logout"></i>Sair</button>
+      </div>
+    </div>
+
+    <div class="tab-nav" id="tab-nav"></div>
+
+    <div class="main">
+      <div class="view on" id="v-agenda"></div>
+      <div class="view" id="v-cal"></div>
+      <div class="view" id="v-origem"></div>
+      <div class="view" id="v-negoc"></div>
+      <div class="view" id="v-users"></div>
+    </div>
+
+    <nav class="mob-nav" id="mob-nav"></nav>
+  </div>
+
+  <!-- ═══ MODAL: AGENDAMENTO ═══ -->
+  <div class="overlay" id="ov-appt" onclick="if(event.target===this)closeAppt()">
+    <div class="modal">
+      <div class="modal-hd">
+        <h3 id="appt-modal-title">Novo lead / agendamento</h3>
+        <button class="mc" onclick="closeAppt()">&times;</button>
+      </div>
+      <input type="hidden" id="appt-id">
+      <div class="frow">
+        <div class="fg"><label>Nome do cliente *</label><input class="finput" id="a-cli" placeholder="Ex.: Joao Silva"></div>
+        <div class="fg"><label>Telefone</label><input class="finput" id="a-tel" placeholder="(81) 9 9999-0000"></div>
+      </div>
+      <div class="frow">
+        <div class="fg"><label>Data *</label><input class="finput" id="a-data" type="date"></div>
+        <div class="fg"><label>Horario</label><input class="finput" id="a-hora" type="time"></div>
+      </div>
+      <div class="frow">
+        <div class="fg"><label>Vendedor *</label><select id="a-vnd"></select></div>
+        <div class="fg"><label>Origem *</label>
+          <select id="a-orig">
+            <option value="">Selecione…</option>
+            <option>Meta Ads</option><option>Instagram Orgânico</option>
+            <option>WhatsApp Direto</option><option>Indicação</option>
+            <option>Walk-in</option><option>Outros</option>
+          </select>
+        </div>
+      </div>
+      <div class="fg"><label>Status</label>
+        <select id="a-status">
+          <option value="pendente">Pendente</option>
+          <option value="agendado">Agendado</option>
+          <option value="confirmado">Confirmado</option>
+          <option value="realizado">Realizado</option>
+          <option value="nao_compareceu">Não compareceu</option>
+          <option value="vendido">Vendido</option>
+        </select>
+      </div>
+      <div class="sec-divider">Negociação</div>
+      <div class="frow">
+        <div class="fg"><label>Modelo de interesse</label><input class="finput" id="a-modelo" placeholder="Ex.: HR-V EXL 2022"></div>
+        <div class="fg"><label>Valor estimado</label><input class="finput" id="a-valor" placeholder="Ex.: R$ 95.000"></div>
+      </div>
+      <div class="fg"><label>Forma de pagamento</label>
+        <select id="a-pgto">
+          <option value="">Não definido</option>
+          <option>À vista</option><option>Financiamento</option>
+          <option>Troca + financiamento</option><option>Troca + à vista</option>
+          <option>FGTS / Consórcio</option>
+        </select>
+      </div>
+      <div class="fg"><label>Observações da negociação</label>
+        <textarea id="a-obs" placeholder="O que foi discutido, objeções, detalhes importantes…"></textarea>
+      </div>
+      <div class="fg"><label>Próximo passo</label><input class="finput" id="a-prox" placeholder="Ex.: Enviar proposta até sexta, ligar para confirmar…"></div>
+      <div class="modal-acts">
+        <button class="btn-cancel" onclick="closeAppt()">Cancelar</button>
+        <button class="btn-prim" onclick="saveAppt()">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ MODAL: NEGOCIAÇÃO ═══ -->
+  <div class="overlay" id="ov-neg" onclick="if(event.target===this)closeNeg()">
+    <div class="modal">
+      <div class="modal-hd"><h3 id="neg-modal-title">Atualizar negociação</h3><button class="mc" onclick="closeNeg()">&times;</button></div>
+      <input type="hidden" id="neg-id">
+      <div class="fg"><label>Status</label>
+        <select id="n-status">
+          <option value="agendado">Agendado</option><option value="confirmado">Confirmado</option>
+          <option value="realizado">Realizado</option>          <option value="nao_compareceu">Não compareceu</option>
+          <option value="vendido">Vendido</option>
+        </select>
+      </div>
+      <div class="frow">
+        <div class="fg"><label>Modelo</label><input class="finput" id="n-modelo" placeholder="Ex.: HR-V EXL"></div>
+        <div class="fg"><label>Valor estimado</label><input class="finput" id="n-valor" placeholder="Ex.: R$ 95.000"></div>
+      </div>
+      <div class="fg"><label>Forma de pagamento</label>
+        <select id="n-pgto">
+           <option value="">Não definido</option>
+           <option>À vista</option><option>Financiamento</option>
+           <option>Troca + financiamento</option><option>Troca + à vista</option>
+           <option>FGTS / Consórcio</option>
+        </select>
+      </div>
+      <div class="fg"><label>Observações</label><textarea id="n-obs" placeholder="O que aconteceu na visita…"></textarea></div>
+      <div class="fg"><label>Próximo passo</label><input class="finput" id="n-prox" placeholder="Ex.: Ligar amanhã para fechar…"></div>
+      <div class="modal-acts">
+        <button class="btn-cancel" onclick="closeNeg()">Cancelar</button>
+        <button class="btn-prim" onclick="saveNeg()">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ MODAL: USUÁRIO ═══ -->
+  <div class="overlay" id="ov-user" onclick="if(event.target===this)closeUser()">
+    <div class="modal">
+      <div class="modal-hd"><h3 id="user-modal-title">Novo usuário</h3><button class="mc" onclick="closeUser()">&times;</button></div>
+      <input type="hidden" id="u-id">
+      <div class="frow">
+        <div class="fg"><label>Nome completo *</label><input class="finput" id="u-nome" placeholder="Ex.: Sandro Lima"></div>
+        <div class="fg"><label>Login *</label><input class="finput" id="u-login" placeholder="Ex.: sandro" autocomplete="off"></div>
+      </div>
+      <div class="frow">
+        <div class="fg"><label>Email *</label><input class="finput" id="u-email" type="email" placeholder="sandro@eyeagenda.app" autocomplete="off"></div>
+        <div class="fg"><label>Senha *</label><input class="finput" id="u-senha" type="password" placeholder="Mínimo 6 caracteres" autocomplete="new-password"></div>
+      </div>
+      <div class="frow">
+        <div class="fg"><label>Função *</label>
+          <select id="u-role">
+            <option value="vendedor">Vendedor</option>
+            <option value="sdr">SDR</option>
+            <option value="gerencia">Gerência</option>
+          </select>
+        </div>
+        <div class="fg"><label>Cor do avatar</label>
+          <select id="u-cor">
+            <option value="#5B6EFF">Índigo</option><option value="#2DD4A7">Verde</option>
+            <option value="#F5A623">Âmbar</option><option value="#d4537e">Rosa</option>
+            <option value="#9b59b6">Roxo</option><option value="#ba7517">Laranja</option>
+            <option value="#e74c3c">Vermelho</option><option value="#1abc9c">Teal</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-acts">
+        <button class="btn-cancel" onclick="closeUser()">Cancelar</button>
+        <button class="btn-prim" onclick="saveUser()">Salvar usuário</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast"><i id="toast-ic" class="ti ti-circle-check" style="color:var(--grn);font-size:18px;"></i><span id="toast-msg">Salvo!</span></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/card.js"></script>
+  <script src="js/agenda.js"></script>
+  <script src="js/calendar.js"></script>
+  <script src="js/origins.js"></script>
+  <script src="js/negotiations.js"></script>
+  <script src="js/agenda-modals.js"></script>
+  <script src="js/users.js"></script>
+  <script src="js/realtime.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
