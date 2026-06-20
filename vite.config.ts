@@ -1,6 +1,34 @@
 import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 import path from 'path';
+import fs from 'fs';
+
+// A simple plugin to copy vanilla JS files to dist/js
+const copyJsPlugin = () => ({
+  name: 'copy-js',
+  writeBundle() {
+    const srcDir = path.resolve(__dirname, 'js');
+    const destDir = path.resolve(__dirname, 'dist/js');
+    
+    if (fs.existsSync(srcDir)) {
+      if (!fs.existsSync(destDir)) {
+        fs.mkdirSync(destDir, { recursive: true });
+      }
+      
+      const files = fs.readdirSync(srcDir);
+      for (const file of files) {
+        const srcPath = path.join(srcDir, file);
+        const destPath = path.join(destDir, file);
+        const stat = fs.statSync(srcPath);
+        
+        if (stat.isFile()) {
+          fs.copyFileSync(srcPath, destPath);
+        }
+      }
+      console.log('Successfully copied js/ files to dist/js/');
+    }
+  }
+});
 
 export default defineConfig({
   root: '.',
@@ -25,6 +53,7 @@ export default defineConfig({
     },
   },
   plugins: [
+    copyJsPlugin(),
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png'],
