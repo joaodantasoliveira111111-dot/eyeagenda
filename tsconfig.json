@@ -10,7 +10,6 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx",
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
@@ -21,6 +20,7 @@
     },
     "types": ["vite/client", "vite-plugin-pwa/client"]
   },
-  "include": ["src", "scripts"],
+  "include": ["src/lib"],
+  "exclude": ["src/hooks", "scripts", "node_modules"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
